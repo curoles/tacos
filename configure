@@ -1,5 +1,48 @@
 #!/bin/bash
 
+ARCH=tachy 
+TC=
+QEMU_DIR=
+
+
+POSITIONAL_ARGS=""
+
+while (( "$#" )); do
+  case "$1" in
+    -a|--arch)
+      ARCH=$2
+      shift 2
+      ;;
+    -t|--tool-chain)
+      TC=$2
+      shift 2
+      ;;
+    -q|--qemu-dir)
+      QEMU_DIR=$2
+      shift 2
+      ;;
+    --) # end argument parsing
+      shift
+      break
+      ;;
+    -*|--*=) # unsupported options
+      echo "Error: Unsupported option $1" >&2
+      exit 1
+      ;;
+    *) # preserve positional arguments
+      POSITIONAL_ARGS="$POSITIONAL_ARGS $1"
+      shift
+      ;;
+  esac
+done
+
+# set positional arguments in their proper place
+eval set -- "$POSITIONAL_ARGS"
+
+# create Makefile with config parameters
 echo "SRC := $(dirname ${BASH_SOURCE[0]})" > Makefile
 echo 'BLD := .' >> Makefile
+echo "ARCH := ${ARCH}" >> Makefile
+echo "TC := ${TC}" >> Makefile
+echo "QEMU_DIR := ${QEMU_DIR}" >> Makefile
 echo 'include $(SRC)/Makefile' >> Makefile

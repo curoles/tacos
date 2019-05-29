@@ -5,7 +5,7 @@ int test()
 }
 
 extern "C"
-int _start(void)
+int _start123(void)
 {
     return 0;
 }
