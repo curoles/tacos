@@ -22,7 +22,7 @@ CFLAGS += -Wall -Werror -I$(SRC)
 LDFLAGS := -nostdlib -nolibc
 
 CXX_FILES := tacos
-ASM_FILES := arch/tachy/start
+ASM_FILES := arch/$(ARCH)/start
 
 OBJ_FILES := $(addprefix $(BLD)/, $(addsuffix .o, $(CXX_FILES) $(ASM_FILES)))
 
