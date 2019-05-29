@@ -6,10 +6,15 @@ QEMU_DIR ?=
 
 CC := $(TC)gcc
 LD := $(TC)ld
+OBJCOPY := $(TC)objcopy
 
 QEMU := $(QEMU_DIR)qemu-system-$(ARCH)
-QEMU_PARAMS := -machine virt -nographic -serial mon:stdio -d in_asm -D qemu.log
 
+QEMU_PARAMS := -machine virt -nographic -serial mon:stdio -d in_asm -D qemu.log -kernel $(BLD)/tacos.elf
+
+ifeq ("$(ARCH)", "x86_64")
+  QEMU_PARAMS := -machine pc -nographic -serial mon:stdio -d in_asm -D qemu.log -drive file=$(BLD)/tacos.img,format=raw
+endif
 
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
@@ -28,6 +33,7 @@ OBJ_FILES := $(addprefix $(BLD)/, $(addsuffix .o, $(CXX_FILES) $(ASM_FILES)))
 
 $(BLD)/tacos.elf: $(OBJ_FILES)
 	$(LD) $(LDFLAGS) -T $(SRC)/arch/$(ARCH)/tacos.ld $^ -o $@
+	$(OBJCOPY) -O binary $@ $(BLD)/tacos.img
 
 $(BLD)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
@@ -37,7 +43,7 @@ $(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S
 
 .PHONY: run
 run:
-	$(QEMU) $(QEMU_PARAMS) -kernel $(BLD)/tacos.elf
+	$(QEMU) $(QEMU_PARAMS)
 
 .PHONY: clean
 clean:
