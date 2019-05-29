@@ -2,7 +2,7 @@ ENTRY(_start)
 SECTIONS
 {
     . = 0x80000000;
-    .startup . : { tacos.o(.text) }
+    .startup . : { arch/tachy/start.o(.text) }
     .text : { *(.text) }
     .data : { *(.data) }
     .bss : { *(.bss COMMON) }
