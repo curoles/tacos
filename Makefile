@@ -18,13 +18,16 @@ else
   CFLAGS := -O3
 endif
 
-CXX_FILES := #tacos
+CFLAGS += -Wall -Werror -I$(SRC)
+LDFLAGS := -nostdlib -nolibc
+
+CXX_FILES := tacos
 ASM_FILES := arch/tachy/start
 
 OBJ_FILES := $(addprefix $(BLD)/, $(addsuffix .o, $(CXX_FILES) $(ASM_FILES)))
 
 $(BLD)/tacos.elf: $(OBJ_FILES)
-	$(LD) -T $(SRC)/arch/$(ARCH)/tacos.ld $^ -o $@
+	$(LD) $(LDFLAGS) -T $(SRC)/arch/$(ARCH)/tacos.ld $^ -o $@
 
 $(BLD)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@

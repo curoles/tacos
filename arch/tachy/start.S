@@ -9,12 +9,22 @@
 
 _start:
     jsr uart_print_banner
+    nop
+    nop
+    nop
     --
     nop
+    nop
+    nop
+    nop
 	--
+    jsr _startOS
+    --
+    nop
+    --
 	jmp .
 
-#define UART_ADDR `0xa000000
+#include "hw/tachy/qemu_virt/defines.h"
 
 #define ASCII_T 0x54
 #define ASCII_a 0x61
@@ -24,7 +34,7 @@ _start:
 #define ASCII_LF 0xa
 
 uart_print_banner:
-	li r1, UART_ADDR //`0xa000000 /* UART */
+	li r1, `UART_ADDR
 	--
 	li  r2, ASCII_T
 	stl r2,r1,0
