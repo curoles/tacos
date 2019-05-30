@@ -2,14 +2,16 @@
 .text
 .global _start
 
+.extern bios_putc
+
 _start:
     cli  // disable the interrupts
-    //mov %si, msg
-    mov $0x61, %ax //%ax, 0x61 //0x0E
-    int $0x10
+    mov $0x61, %al
+    callw bios_putc
 loop:
     jmp loop
 halt:
     hlt
 
-//msg: db "TacOS", 0
+message:
+    .asciz "TacOS" // asciz puts a 0 byte at the end

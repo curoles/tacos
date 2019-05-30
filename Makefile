@@ -10,12 +10,6 @@ OBJCOPY := $(TC)objcopy
 
 QEMU := $(QEMU_DIR)qemu-system-$(ARCH)
 
-QEMU_PARAMS := -machine virt -nographic -serial mon:stdio -d in_asm -D qemu.log -kernel $(BLD)/tacos.elf
-
-ifeq ("$(ARCH)", "x86_64")
-  QEMU_PARAMS := -machine pc -nographic -serial mon:stdio -d in_asm -D qemu.log -drive file=$(BLD)/tacos.img,format=raw
-endif
-
 DEBUG ?= 0
 ifeq ($(DEBUG), 1)
   CFLAGS := -g -O2
@@ -29,6 +23,8 @@ LDFLAGS := -nostdlib -nolibc
 CXX_FILES := tacos
 ASM_FILES := arch/$(ARCH)/start
 
+include $(SRC)/arch/$(ARCH)/build.mk
+
 OBJ_FILES := $(addprefix $(BLD)/, $(addsuffix .o, $(CXX_FILES) $(ASM_FILES)))
 
 $(BLD)/tacos.elf: $(OBJ_FILES)
@@ -38,8 +34,11 @@ $(BLD)/tacos.elf: $(OBJ_FILES)
 $(BLD)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S
+$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S $(BLD)/arch/$(ARCH)
 	$(CC) $(CFLAGS) -c $< -o $@
+
+$(BLD)/arch/$(ARCH):
+	mkdir -p $@
 
 .PHONY: run
 run:
@@ -49,3 +48,4 @@ run:
 clean:
 	rm -f $(OBJ_FILES)
 	rm -f $(BLD)/tacos.elf
+	rm -f $(BLD)/*.o
