@@ -17,7 +17,7 @@ else
   CFLAGS := -O3
 endif
 
-CFLAGS += -Wall -Werror -I$(SRC)
+CFLAGS += -ffreestanding -Wall -Werror -I$(SRC)
 LDFLAGS := -nostdlib -nolibc
 
 CXX_FILES := tacos
