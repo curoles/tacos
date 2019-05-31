@@ -18,8 +18,22 @@ _start:
     nop
     nop
 	--
-    jsr _startOS
+    li  r0, `0x80001000 //`stack_top
+    ann sp, r0, 15
     --
+    jsr tachy_init
+    nop
+    nop
+    nop
+    --
+    jsr _start_OS
+    nop
+    nop
+    nop
+    --
+    nop
+    nop
+    nop
     nop
     --
 	jmp .

@@ -7,6 +7,7 @@ QEMU_DIR ?=
 CC := $(TC)gcc
 LD := $(TC)ld
 OBJCOPY := $(TC)objcopy
+OBJDUMP := $(TC)objdump
 
 QEMU := $(QEMU_DIR)qemu-system-$(ARCH)
 
@@ -30,18 +31,19 @@ OBJ_FILES := $(addprefix $(BLD)/, $(addsuffix .o, $(CXX_FILES) $(ASM_FILES)))
 $(BLD)/tacos.elf: $(OBJ_FILES)
 	$(LD) $(LDFLAGS) -T $(SRC)/arch/$(ARCH)/tacos.ld $^ -o $@
 	$(OBJCOPY) -O binary $@ $(BLD)/tacos.img
+	$(OBJDUMP) -d $@ > $(BLD)/objdump.txt
 
 $(BLD)/%.o: $(SRC)/%.cpp
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S $(BLD)/arch/$(ARCH)
+$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.cpp $(BLD)/arch/$(ARCH)
+$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.cpp
+	@mkdir -p $(@D)
 	$(CC) $(CFLAGS) -c $< -o $@
 
-$(BLD)/arch/$(ARCH):
-	mkdir -p $@
 
 .PHONY: run
 run:
