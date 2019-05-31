@@ -37,6 +37,9 @@ $(BLD)/%.o: $(SRC)/%.cpp
 $(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S $(BLD)/arch/$(ARCH)
 	$(CC) $(CFLAGS) -c $< -o $@
 
+$(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.cpp $(BLD)/arch/$(ARCH)
+	$(CC) $(CFLAGS) -c $< -o $@
+
 $(BLD)/arch/$(ARCH):
 	mkdir -p $@
 
@@ -44,8 +47,13 @@ $(BLD)/arch/$(ARCH):
 run:
 	$(QEMU) $(QEMU_PARAMS)
 
+$(BLD)/run.bash:
+	echo "#!/bin/bash" > $@
+	echo "$(QEMU) $(QEMU_PARAMS)" >> $@
+	chmod a+x $@
+
 .PHONY: clean
 clean:
 	rm -f $(OBJ_FILES)
-	rm -f $(BLD)/tacos.elf
+	rm -f $(BLD)/tacos.elf $(BLD)/tacos.img $(BLD)/qemu.log $(BLD)/run.bash
 	rm -f $(BLD)/*.o

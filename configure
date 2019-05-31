@@ -13,7 +13,7 @@ while (( "$#" )); do
       ARCH=$2
       shift 2
       ;;
-    -t|--tool-chain)
+    -t|--toolchain)
       TC=$2
       shift 2
       ;;
