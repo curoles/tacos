@@ -1,5 +1,7 @@
 #include <cstdint>
 
+#include "os/spinlock.h"
+
 int test()
 {
     return 0;

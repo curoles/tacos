@@ -24,6 +24,8 @@ LDFLAGS := -nostdlib -nolibc
 CXX_FILES := tacos
 ASM_FILES := arch/$(ARCH)/start
 
+HDR_FILES := os/spinlock.h
+
 include $(SRC)/arch/$(ARCH)/build.mk
 
 OBJ_FILES := $(addprefix $(BLD)/, $(addsuffix .o, $(CXX_FILES) $(ASM_FILES)))
@@ -33,7 +35,7 @@ $(BLD)/tacos.elf: $(OBJ_FILES)
 	$(OBJCOPY) -O binary $@ $(BLD)/tacos.img
 	$(OBJDUMP) -d $@ > $(BLD)/objdump.txt
 
-$(BLD)/%.o: $(SRC)/%.cpp
+$(BLD)/%.o: $(SRC)/%.cpp $(addprefix $(SRC)/, $(HDR_FILES))
 	$(CC) $(CFLAGS) -c $< -o $@
 
 $(BLD)/arch/$(ARCH)/%.o: $(SRC)/arch/$(ARCH)/%.S
