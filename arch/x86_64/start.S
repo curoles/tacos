@@ -43,6 +43,8 @@
 
 _start:
     cli                           // disable the interrupts
+
+    // set CS
     ljmp $0, $setcs
 setcs:
 
@@ -52,7 +54,7 @@ setcs:
     movw %ax, %es
     movw %ax, %ds
     movw %ax, %ss
-
+    movw %ax, %bp
 
     /*
      * Initialize the stack.
@@ -72,6 +74,8 @@ setcs:
     callw greeting                // display a greeting string
 
     callw x86_init
+
+    callw _enter_protected_mode
 
 loop:
     hlt

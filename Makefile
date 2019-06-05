@@ -60,4 +60,5 @@ $(BLD)/run.bash:
 clean:
 	rm -f $(OBJ_FILES)
 	rm -f $(BLD)/tacos.elf $(BLD)/tacos.img $(BLD)/qemu.log $(BLD)/run.bash
+	rm -f $(BLD)/objdump.txt
 	rm -f $(BLD)/*.o
